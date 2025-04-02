@@ -5,7 +5,7 @@ async function sendClientConfirmation(caseId: number, patientId: number, result:
   // In a real system, this could call an API or messaging service
 }
 
-// Main processing function for test results with detailed flow for Case Management Flow.
+// Main processing function for test results with detailed flow for Case Management Flow
 export async function processTestResults(accountId: number = 1) {
   // Step 1: Fetch all unprocessed test results from the database (Positive/abnormal and NeedProcess=not set yet)
   const results = await fetchUnprocessedTestResults();
