@@ -5,9 +5,9 @@ async function sendClientConfirmation(caseId: number, patientId: number, result:
   // In a real system, this could call an API or messaging service
 }
 
-// Main processing function for test results with detailed flow for client confirmation
+// Main processing function for test results with detailed flow for Case Management Flow.
 export async function processTestResults(accountId: number = 1) {
-  // Step 1: Fetch all unprocessed test results from the database
+  // Step 1: Fetch all unprocessed test results from the database (Positive/abnormal and NeedProcess=not set yet)
   const results = await fetchUnprocessedTestResults();
 
   // Step 2: Loop through each test result to process it individually
@@ -15,7 +15,7 @@ export async function processTestResults(accountId: number = 1) {
     // Step 3: Classify the test result as positive/abnormal or negative/normal
     const isPositive = await classifyTestResult(result); // True = positive/abnormal, False = negative/normal
 
-    // Action: Check if the result is negative/normal
+    // Action: Check if the result is negative/normal, exit the CaseManagement Flow
     if (!isPositive) {
       // Description: Result is negative (normal), no further action needed in Case Management
       // Flow: Mark as processed and skip to the next result
@@ -27,12 +27,12 @@ export async function processTestResults(accountId: number = 1) {
       console.log(`Result ${result.id} is positive/abnormal, proceeding to scope check.`);
     }
 
-    // Step 4: Check if the product is in Case Management scope for this account
+    // Step 4: Check if the product is in Case Management scope for this account (Global setting and Account Setting should be True )
     const inScope = await checkCaseManagementScope(result, accountId);
 
     // Action: Check if the result is out of Case Management scope
     if (!inScope) {
-      // Description: Result is positive/abnormal but not in scope (e.g., account settings disable it)
+      // Description: Result is positive/abnormal but not in scope (e.g., global/account settings disable it)
       // Flow: Mark as processed, no case created, no confirmation sent
       await endProcessingForNormalResult(result);
       console.log(`Result ${result.id} is out of Case Management scope, processing ended.`);
@@ -42,7 +42,8 @@ export async function processTestResults(accountId: number = 1) {
       console.log(`Result ${result.id} is in scope, checking if already processed.`);
     }
 
-    // Step 5: Check if this result has already been processed into a case
+    // Step 5: Check if this result has already been processed into a case.
+    // check if the result/test.id is already in CaseManagementProductAndBundleModel or not
     const isProcessed = await isTestResultProcessed(result.id);
 
     // Action: Check if the result was previously processed
@@ -56,7 +57,8 @@ export async function processTestResults(accountId: number = 1) {
       console.log(`Result ${result.id} is new, checking for existing case.`);
     }
 
-    // Step 6: Check if an open case exists for this patient
+    // Step 6: Check if an open case exists for this patient.
+    // Check if the Patient is already in Test_result table.
     const existingCase = await findExistingOpenCase(result.patientId);
     let caseId: number;
 
