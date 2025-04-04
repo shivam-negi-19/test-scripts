@@ -1,6 +1,7 @@
+// Defines data types for case management entities
 export type TestResult = {
-  id: number;
-  patientId: string; // Standalone string, no FK
+  id?: number;
+  patientId: string;
   accountId: string;
   productId: number | null;
   bundleId?: number | null;
@@ -14,8 +15,9 @@ export type TestResult = {
 };
 
 export type Case = {
-  id: string; // String ID
-  patientId: string; // Standalone string, no FK
+  id: string;
+  patientId: string;
+  testName: string;
   caseManagerId?: number | null;
   status: 'Untouched' | 'InProgress' | 'Closed';
   isClosed: boolean;
@@ -29,7 +31,7 @@ export type Case = {
 
 export type CaseManagementProductAndBundle = {
   id: number;
-  caseId: string; // String ID
+  caseId: string;
   testResultId: number;
   productId: number | null;
   bundleId?: number | null;
@@ -41,7 +43,7 @@ export type CaseManagementProductAndBundle = {
 
 export type CaseManagerLinker = {
   id: number;
-  caseId: string; // String ID
+  caseId: string;
   caseManagerId: number;
   createdAt: string;
   updatedAt: string;
@@ -60,29 +62,28 @@ export interface CaseManager {
   id: number;
   name: string;
   isActive: boolean;
+  canBeAssignedCases: boolean; // Added for load balancing
   createdAt: string;
   updatedAt: string;
 };
 
 export type GlobalSetting = {
   id: number;
-  isCaseManagementEnabled: boolean; // Boolean flag
+  isCaseManagementEnabled: boolean;
   createdAt: string;
   updatedAt: string;
 };
 
 export type AccountSetting = {
   id: number;
-  accountId: string; // String ID
-  productId: number | null;
-  catalogType: 'DTC' | 'Groups' | 'UI_API';
+  accountId: string;
   isCaseManagementEnabled: boolean;
   createdAt: string;
   updatedAt: string;
 };
 
 export type Account = {
-  id: string; // String ID
+  id: string;
   name: string;
   createdAt: string;
   updatedAt: string;
