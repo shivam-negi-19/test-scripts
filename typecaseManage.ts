@@ -82,23 +82,37 @@ export type AccountSetting = {
   updatedAt: string;
 };
 
-export type Account = {
-  id: string;
-  name: string;
-  createdAt: string;
-  updatedAt: string;
-};
+// export type Account = {
+//   id: string;
+//   name: string;
+//   createdAt: string;
+//   updatedAt: string;
+// };
 
-export type Product = {
-  id: number;
-  name: string;
-  createdAt: string;
-  updatedAt: string;
-};
+// export type Product = {
+//   id: number;
+//   name: string;
+//   createdAt: string;
+//   updatedAt: string;
+// };
 
-export type Bundle = {
-  id: number;
-  bundle_name: string;
-  createdAt: string;
-  updatedAt: string;
+// export type Bundle = {
+//   id: number;
+//   bundle_name: string;
+//   createdAt: string;
+//   updatedAt: string;
+// };
+
+
+
+
+// Notification type based on test_db_CaseNotifications
+export type Notification = {
+  id: number;                    // int AUTO_INCREMENT
+  caseId: string;                // varchar(36)
+  caseManagerId: number;         // int
+  templateID: number;            // int (e.g., 363 for initial, 364 for reminder)
+  sentAt: Date;                  // timestamp
+  reminderCount: number;         // int
+  clicked: boolean;              // tinyint(1)
 };
